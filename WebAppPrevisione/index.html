@@ -7,12 +7,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="js/prevision.js"></script>
     <script src="js/pearson-correlation.js"></script>
+    <script src="js/readFromFile.js"></script>
 	<meta charset="utf-8" />
 </head>
 <body>
     <div>
+        <input type='file' accept='text/plain' onchange='saveFile(event)'><br>
         Dati: <input type="text" id="datainput" style="width:50em" placeholder="Inserire i valori separati da ;" />
-        <input type="button" value="Previsione" onclick="predict();" /><br />
+        <input type="button" value="Previsione" onclick="predict(document.getElementById('datainput').value);" /><br />
     </div>
     <br />
     <div id="res">

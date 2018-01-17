@@ -27,8 +27,9 @@
     return stag;
 }
 
-function predict() {
-    var values = getValue();
+function predict(valString) {
+    
+    var values = getValue(valString);
     var stag = pearson(values);
     document.getElementById("stagres").value = stag;
 
@@ -131,11 +132,17 @@ function predict() {
     document.getElementById("valres").value = prev;
 }
 
-function getValue() {
+function getValue(valString) {
     var ret = new Array();
     try {
-        var valString = document.getElementById("datainput").value;
+        //var valString = document.getElementById("datainput").value;
         var val = valString.split(";");
+        if (val.length < 3) {
+            val = valString.split("\n");
+        }
+        if (val.length < 2) {
+            alert("Controlla che i valori nel file siano uno per riga o separati da \";\"");
+        }
         for (v in val) {
             ret[v] = parseInt(val[v]);
         }
@@ -143,7 +150,7 @@ function getValue() {
             throw new Error;
         }
     } catch (err) {
-        alert("Per permettere il calcolo della stagionalità ci vogliono almeno 12 valori!");ù
+        alert("Per permettere il calcolo della stagionalità ci vogliono almeno 12 valori!");
     }
     return ret;
 }

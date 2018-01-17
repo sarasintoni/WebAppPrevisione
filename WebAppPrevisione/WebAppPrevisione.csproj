@@ -121,6 +121,7 @@
     <Content Include="index.html" />
     <Content Include="js\pearson-correlation.js" />
     <Content Include="js\prevision.js" />
+    <Content Include="js\readFromFile.js" />
     <Content Include="mystyle.css" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
