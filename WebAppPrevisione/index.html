@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
+    <title>Previsione web</title>
     <link rel="stylesheet" type="text/css" href="mystyle.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="js/prevision.js"></script>
@@ -12,16 +12,47 @@
 </head>
 <body>
     <div>
-        <input type='file' accept='text/plain' onchange='saveFile(event)'><br>
-        Dati: <input type="text" id="datainput" style="width:50em" placeholder="Inserire i valori separati da ;" />
-        <input type="button" value="Previsione" onclick="predict(document.getElementById('datainput').value);" /><br />
+        <div>Per l'inserimento dei dati (ALMENO 12):
+            <ul>
+                <li>Da file: un valore per riga o separati da ";"</li>
+                <li>Casella di testo: serparati da ";"</li>
+            </ul>
+        </div>
+        <div id="fileinputdiv">
+            <input type='file' id="fileinput" accept='text/plain' onchange='saveFile(event)'> o
+        </div>
+        <div id="datainputdiv">
+            Dati: <input type="text" id="datainput" style="width:50em" placeholder="Inserire i valori separati da ;" />
+            <input type="button" value="Previsione" onclick="predictFromData();" />
+        </div>
     </div>
     <br />
     <div id="res">
         <p id="title">Results</p>
         <div class="r">stagionalità: <input type="text" id="stagres" readonly /><br /></div>
         <div class="r"> t: <input type="text" id="tres" readonly /><br /></div>
-        <div class="r"> value: <input type="text" id="valres" readonly /></div>
+        <div class="r"> value: <input type="text" id="valres"  readonly /></div>
     </div>
+    <input type="button" id="btnres" value="Reset" onclick="reset();" />
+
+    <script>
+        function reset() {
+            document.getElementById("fileinput").value = "";
+            document.getElementById("datainput").value = "";
+            document.getElementById("stagres").value = "";
+            document.getElementById("tres").value = "";
+            document.getElementById("valres").value = "";
+        }
+
+        window.onload = reset;
+
+        function init() { }
+
+        function predictFromData() {
+            var v = document.getElementById("datainput").value;
+            console.log("Valori = " + v);
+            predict(v);
+        }
+    </script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     var totElem = values.length - 12;
     var originals = new Array(totElem);
     var sfas;
-    for(i = 0; i < values.length; i++) {
+    for (i = 0; i < totElem; i++) {
         originals[i] = parseInt(values[i + 12]);
     }
 
@@ -18,7 +18,7 @@
                     originals, sfas
         );
         var r = pearsonCorrelation(data, 0, 1);
-        console.log(r);
+        //console.log(r);
         if (r > max) {
             max = r;
             stag = gap;
@@ -40,20 +40,22 @@ function predict(valString) {
     var avgVal = new Array();
     var window = new Array();
     var firstcma;
+    var idx = -1;
 
     for (i = 0; i < values.length; i++) {
         window.push(values[i]);
         if (window.length == stag) {
             var sum = 0;
-            //console.log("Media tra:");
             for (v in window) {
-                //console.log(window[v]);
                 sum += window[v];
             }
             var avg = sum / stag;
-            //console.log("= " + avg);
-            if (firstcma == undefined) firstcma = i - (stag / 2 - 1);
-            ma[i - (stag / 2 - 1)] = avg;
+            if (firstcma == undefined) {
+                if(stag%2!=0) firstcma = i - parseInt(stag / 2);
+                else firstcma = i - (stag / 2) + 1;
+                idx = firstcma;
+            }
+            ma[idx++] = avg;
             window.shift();
         }
     }
@@ -77,17 +79,14 @@ function predict(valString) {
     }
 
     var avgs = new Array();
-    var start = stag / 2;
+    var start = Math.ceil(stag / 2);
     for (i = 0; i < stag; i++) {
-        //console.log("Nella media " + i + ":");
         var count = 0;
         var app = 0;
         for (v = start + firstcma; v < sr.length; v+=stag) {
             app += sr[v];
-            //console.log(sr[v] + " somma attuale = " + app);
             count++;
         }
-        //console.log("media = " + (app / count));
         avgs.push(app / count);
         start++;
         var news = start % stag;
@@ -98,7 +97,6 @@ function predict(valString) {
         var idx = v % avgs.length;
         var res = Math.round((values[v] / avgs[idx]) * 100) / 100;
         dest.push(res);
-        //console.log("valore " + values[v] + " stagione " + avgs[idx] + " => destagionalizzata " + res);
     }
 
     var somma = 0;
@@ -108,8 +106,10 @@ function predict(valString) {
         count++;
     }
     var yMedia = somma / count;
+    console.log("y media = " + yMedia);
 
     var xMedia = (dest.length + 1) / 2;
+    console.log("x media = " + xMedia);
 
     var sumCodev = 0.0;
     var sumDev = 0.0;
@@ -117,12 +117,14 @@ function predict(valString) {
         sumCodev += (((parseInt(v) + 1) - xMedia) * (dest[v] - yMedia));
         sumDev += Math.pow(((parseInt(v) + 1) - xMedia), 2);
     }
+    console.log("sum codev = " + sumCodev);
+    console.log("sum dev = " + sumDev);
 
     var coereg = sumCodev / sumDev;
-    //console.log("Coe reg = " + coereg);
+    console.log("Coe reg = " + coereg);
 
     var intercetta = yMedia - (coereg * xMedia);
-    //console.log("Intercetta = " + intercetta);
+    console.log("Intercetta = " + intercetta);
 
     var newIndex = dest.length + 1;
     document.getElementById("tres").value = newIndex;
@@ -135,13 +137,12 @@ function predict(valString) {
 function getValue(valString) {
     var ret = new Array();
     try {
-        //var valString = document.getElementById("datainput").value;
         var val = valString.split(";");
         if (val.length < 3) {
             val = valString.split("\n");
         }
         if (val.length < 2) {
-            alert("Controlla che i valori nel file siano uno per riga o separati da \";\"");
+            alert("Errore nel file:\n ci devono essere almeno 12 valori, uno per riga o separati da \";\"");
         }
         for (v in val) {
             ret[v] = parseInt(val[v]);
