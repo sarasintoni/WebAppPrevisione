@@ -117,8 +117,8 @@ function predict(valString) {
         sumCodev += (((parseInt(v) + 1) - xMedia) * (dest[v] - yMedia));
         sumDev += Math.pow(((parseInt(v) + 1) - xMedia), 2);
     }
-    console.log("sum codev = " + sumCodev);
-    console.log("sum dev = " + sumDev);
+    console.log("Codev = " + sumCodev);
+    console.log("Dev = " + sumDev);
 
     var coereg = sumCodev / sumDev;
     console.log("Coe reg = " + coereg);
